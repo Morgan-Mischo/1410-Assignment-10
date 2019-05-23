@@ -1,0 +1,134 @@
+package lightsout;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class LightsOutModelTests
+{
+    /**
+     * Testing that the light stays the way that it's supposed to
+     */
+    @Test
+    public void testLightStay ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        
+        boolean myBoolean; 
+        myBoolean = myModel.getColor(0,0); 
+        myModel.clicked(0, 0); 
+        assertEquals(!myBoolean, myModel.getColor(0, 0)); 
+    }
+    
+    /**
+     * Testing that the light changes the way that it's supposed to
+     */
+    @Test
+    public void testLightChange ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        
+        boolean myBoolean; 
+        myBoolean = myModel.getColor(0,0); 
+        myModel.clicked(0, 0); 
+        myModel.lightChange(0, 0);
+        
+        assertEquals(myBoolean, myModel.getColor(0, 0)); 
+        
+    }
+    
+    /**
+     * Testing that the getMyBoard method works the way it's supposed to
+     */
+    @Test
+    public void testGetMyBoard ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        
+        boolean myBoolean; 
+        myBoolean = myModel.getColor(0,0); 
+        myModel.clicked(0, 0); 
+        myModel.lightChange(0, 0);
+        
+        assertEquals(myBoolean, myModel.getMyBoard()[0][0]); 
+    }
+    
+    /**
+     * Testing that manual mode returns true when needed
+     */
+    @Test
+    public void testManualModeTrue ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        
+        boolean myBoolean; 
+        myBoolean = myModel.getColor(0,0); 
+        myModel.clicked(0, 0); 
+        myModel.lightChange(0, 0);
+        
+        assertFalse(myModel.MANUAL_MODE()); 
+    }
+    /**
+     * Testing that manual mode returns false when needed
+     */
+    @Test
+    public void testManualModeFalse ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        
+        boolean myBoolean; 
+        myBoolean = myModel.getColor(0,0); 
+        myModel.clicked(0, 0); 
+        myModel.lightChange(0, 0);
+        
+        myModel.setManualSetUpMode(true);
+        
+        assertTrue(myModel.MANUAL_MODE()); 
+    }
+    
+    /**
+     * Testing that IllegalArgument is thrown when constructor is too small
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorSmall ()
+    {
+        LightsOutModel myModel = new LightsOutModel(0, 5); 
+    }
+    
+    /**
+     * Testing that IllegalArgument is thrown when one clicks in an area is too small 
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testClickSmall ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        myModel.clicked(0, -1); 
+    }
+    /**
+     * Testing that IllegalArgument is thrown when one clicks in an area that is too big
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testClickBig ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        myModel.clicked(5,  0); 
+    }
+    /**
+     * Testing that IllegalArgument is thrown when one tries to get a color in an area that is too small
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetColorSmall ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        myModel.getColor(-1, 0); 
+    }
+    /**
+     * Testing that IllegalArgument is thrown when one tries to get a color in an area that is too big
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetColorBig ()
+    {
+        LightsOutModel myModel = new LightsOutModel(5, 5); 
+        myModel.getColor(0, 5); 
+    }
+
+}
