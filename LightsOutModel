@@ -1,0 +1,212 @@
+package lightsout;
+
+import java.util.Random;
+
+public class LightsOutModel
+{
+    /** Integer that represents the rows */
+    public final int ROWS;  
+    
+    /** Integer that represents the columns */
+    public final int COLS; 
+    
+    /**Integer that is used when the player wins */
+    public static final int WIN = 1; 
+    
+    /** Array that represents the board */
+    boolean[][] board; 
+    
+    /** Whether or not the game is in manual mode */
+    boolean MANUAL_MODE; 
+    
+    /** True if the game is going */
+    boolean GAME_ON; 
+    
+    
+    /**
+     * Creates a Lights Out board with the specified number of rows and columns. 
+     */
+    public LightsOutModel(int rows, int cols)
+    {
+     // Make sure parameters are sensible
+        if (rows <= 0 || cols <= 0)
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        //References for the constants
+        this.ROWS = rows; 
+        this.COLS = cols; 
+
+        // Create the board. It will start off not in manual mode  and with the player having not yet started
+        board = new boolean[rows][cols];
+        MANUAL_MODE = false; 
+        GAME_ON = false; 
+        
+        newGame();     
+    }
+    
+    /**
+     * Restarts the game with a new board that has some white and black squares but is still solvable. 
+     */
+    
+    public void newGame ()
+    {
+        //Initializing my random variable
+        Random rand = new Random();
+        
+        //Ranomly assigns an int between 20 and 30 
+        int clicks = rand.nextInt(10) + 20; 
+        
+        //The game has started, doesn't start in manual mode
+        GAME_ON = true; 
+        MANUAL_MODE = false; 
+        
+        //For loop that sets the colors of the squares on the board
+        for(int i = 0; i < clicks; i++)
+        {
+            int ranRow = rand.nextInt(ROWS); 
+            int ranCol = rand.nextInt(COLS); 
+            clicked(ranRow, ranCol); 
+        }
+    }
+    
+ 
+    
+   /**
+    * Returns whether the color of a square is white or black
+    */
+   public boolean getColor (int row, int col)
+   {
+       //Have to put in a try catch loop 
+       try
+       {
+           //Return the color at the specified row and column
+           return board[row][col];
+       }
+       catch (ArrayIndexOutOfBoundsException e)
+       {
+           throw new IllegalArgumentException();
+       }
+   }
+   
+   /**
+    * Returns the board itself
+    */
+   
+   public boolean[][] getMyBoard ()
+   {
+       return board; 
+   }
+   
+   /**
+    * The light changing
+    */
+   
+   public void lightChange (int row, int col)
+   {
+       //Has to be in bounds
+       if(row < 0 || col < 0 || row >= ROWS || col >= COLS)
+       {
+           throw new IllegalArgumentException(); 
+       }
+       //Switch the color of the specified row and column
+       board[row][col] = !(board[row][col]); 
+   }
+   
+   /**
+    * What happens when the user clicks a light
+    */
+   
+   public int clicked (int row, int col)
+   {
+       //Must be in bounds
+       if(row < 0 || col < 0 || row >= ROWS || col >= COLS)
+       {
+           throw new IllegalArgumentException(); 
+       }
+       //Only change specified row and col if in manual
+       if(MANUAL_MODE)
+       {
+           lightChange(row, col); 
+           return 0; 
+       }
+       //If the game is over, skip
+       if(!GAME_ON)
+       {
+           return 0; 
+       }
+       //Else change neighboring cells 
+       for(int i = -1; i <= 1; i++)
+       {
+           for(int j = -1; j <= 1; j++)
+           {
+               if((Math.abs(i) + Math.abs(j)) > 1)
+                   {
+                       continue; 
+                   }
+                   try 
+                   {
+                   lightChange(row + i, col + j); 
+                   }
+                   catch (IllegalArgumentException e)
+                   {
+                       
+                   }
+           }
+       }
+       //If move results in a win for the player, return WIN
+       if(theyWon() && !MANUAL_MODE)
+       {
+           GAME_ON = false; 
+           return WIN; 
+       }
+       return 0; 
+   }
+
+   /** 
+    * Returns true if the player has won the game
+    */
+   
+   private boolean theyWon ()
+{
+       for(int i = 0; i < ROWS; i++)
+       {
+           for(int j = 0; j < COLS; j++)
+           {
+               //If any are still white
+               if(board[i][j])
+               {
+                   return false; 
+               }
+           }
+       }
+       return true; 
+}
+
+
+   /**
+    * Enabling/disabling manual setUp mode
+    */
+public void setManualSetUpMode (boolean b)
+{
+    MANUAL_MODE = b; 
+    GAME_ON = !b; 
+    
+}
+
+/**
+ * True if the game is in manual mode
+ */
+
+public boolean MANUAL_MODE ()
+{
+    return MANUAL_MODE; 
+}
+
+
+
+
+
+
+}
